@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# Keep image assets in regular Git without text conversion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary

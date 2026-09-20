@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+* { box-sizing: border-box; }
+
+:root {
+  --ct-bg: #04132a;
+  --ct-panel: #071e3d;
+  --ct-panel2: #0a2550;
+  --ct-accent: #2196f3;
+  --ct-accent-glow: rgba(33,150,243,0.5);
+  --ct-border: #1a4a8a;
+  --ct-text: #b8d4f8;
+  --ct-heading: #e0f0ff;
+  --ct-selected: #1565c0;
+
+  --t-bg: #1a0d00;
+  --t-panel: #1e1200;
+  --t-panel2: #2a1a00;
+  --t-accent: #c9942a;
+  --t-accent-glow: rgba(201,148,42,0.5);
+  --t-border: #6b4a10;
+  --t-text: #d4b07a;
+  --t-heading: #f0d890;
+  --t-selected: #7a4a00;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
