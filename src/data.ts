@@ -32,6 +32,8 @@ import imgKnifeGut         from './imports/Stock-Images/Gut Knife-Vanilla.png';
 import imgKnifeM9Bayonet   from './imports/Stock-Images/M9 Bayonet_Vanilla.png';
 import imgKnifeSkeleton    from './imports/Stock-Images/Skeleton Knife_Vanilla.png';
 import imgKnifeStiletto    from './imports/Stock-Images/Stiletto_Vanilla.png';
+import placeholderSkin from './imports/Skins/placeholder.svg';
+import { synchronizeWebsiteData } from './gameSkinCatalog';
 
 // ── Rifle skins ──────────────────────────────────────────────────────────────
 import skinAK47Aniki from './imports/Skins/Guns/Rifle/AK-47/ak-47-aniki.png';
@@ -389,7 +391,7 @@ import skinSportsTheAmbassador from './imports/Skins/Gloves/Sports Gloves/sports
 import skinSportsTidal from './imports/Skins/Gloves/Sports Gloves/sports-gloves-tidal.png';
 
 // ── Types ────────────────────────────────────────────────────────────────────
-export type Skin = { name: string; img: string };
+export type Skin = { name: string; displayName?: string; img: string };
 export type Weapon = { name: string; img?: string; skins: Skin[]; variants?: Weapon[] };
 export type Category = { label: string; weapons: Weapon[] };
 export type KnifeGlove = { name: string; img?: string; skins: Skin[] };
@@ -918,3 +920,6 @@ export const T_DATA: {
   knifeTypes:  sharedKnifeTypes,
   glovesTypes: sharedGlovesTypes,
 };
+
+synchronizeWebsiteData(CT_DATA, placeholderSkin);
+synchronizeWebsiteData(T_DATA, placeholderSkin);

@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { CT_DATA, T_DATA, type Weapon, type KnifeType, type GlovesType } from './data';
+import { CT_DATA, T_DATA, type Weapon, type KnifeType, type GlovesType, type Skin } from './data';
 import imgCTKnifeStock from './imports/Stock-Images/CT Knife_Stock.png';
 import imgTKnifeStock  from './imports/Stock-Images/T Knife_Stock.png';
 import imgCTBackground from './imports/CT-Background.png';
@@ -140,8 +140,8 @@ export default function App() {
   const weapon = side === 'ct' ? ctWeapon : tWeapon;
 
   // Returns skins with Stock prepended at index 0
-  function effectiveSkins(w: Weapon) {
-    return [{ name: 'Stock', img: w.img ?? '' }, ...w.skins];
+  function effectiveSkins(w: Weapon): Skin[] {
+    return [{ name: 'Stock', displayName: 'Stock', img: w.img ?? '' }, ...w.skins];
   }
 
   const knifeView      = side === 'ct' ? ctKnifeView      : tKnifeView;
@@ -166,7 +166,7 @@ export default function App() {
   }
 
   // Unified carousel items — either KnifeType/GlovesType (with img+name) or Skin (same shape)
-  type CarouselItem = { name: string; img: string };
+  type CarouselItem = { name: string; displayName?: string; img: string };
   let carouselItems: CarouselItem[];
   let carouselSelected: number;
   if (sel === 'weapon') {
@@ -325,7 +325,7 @@ export default function App() {
             const eSkins = effectiveSkins(av);
             const savedSkin = eSkins[savedSkinIdx];
             const rowImg = savedSkin?.img || av.img;
-            const skinLabel = savedSkinIdx > 0 && savedSkin ? savedSkin.name : null;
+            const skinLabel = savedSkinIdx > 0 && savedSkin ? (savedSkin.displayName ?? savedSkin.name) : null;
             const rowName = av.name;
             return (
               <button key={w.name} onClick={() => pickWeapon(w)} style={{
@@ -401,11 +401,11 @@ export default function App() {
   const activeVariant = getActiveVariant(weapon);
   const activeSkinName =
     sel === 'knife' && knifeEquipped && knifeTypeIdx > 0
-      ? (data.knifeTypes[knifeTypeIdx - 1].skins[knifeSkinIdx]?.name ?? '')
+      ? (data.knifeTypes[knifeTypeIdx - 1].skins[knifeSkinIdx]?.displayName ?? data.knifeTypes[knifeTypeIdx - 1].skins[knifeSkinIdx]?.name ?? '')
     : sel === 'gloves' && glovesEquipped
-      ? (data.glovesTypes[glovesTypeIdx].skins[glovesSkinIdx]?.name ?? '')
+      ? (data.glovesTypes[glovesTypeIdx].skins[glovesSkinIdx]?.displayName ?? data.glovesTypes[glovesTypeIdx].skins[glovesSkinIdx]?.name ?? '')
     : sel === 'weapon' && skinIdx > 0 && !(weapon.variants && variantView === 'types')
-      ? (effectiveSkins(activeVariant)[skinIdx]?.name ?? '')
+      ? (effectiveSkins(activeVariant)[skinIdx]?.displayName ?? effectiveSkins(activeVariant)[skinIdx]?.name ?? '')
     : '';
 
   function buildExportText() {
@@ -592,7 +592,7 @@ export default function App() {
                       ? [{ name: activeVariant.name, img: activeVariant.img ?? '' }]
                       : effectiveSkins(activeVariant);
                     const previewImg = allSkins[skinIdx]?.img || activeVariant.img;
-                    const previewAlt = allSkins[skinIdx]?.name ?? activeVariant.name;
+                    const previewAlt = allSkins[skinIdx]?.displayName ?? allSkins[skinIdx]?.name ?? activeVariant.name;
                     return previewImg
                       ? <img src={previewImg} alt={previewAlt} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                       : <GunSVG color={th.heading} size={340} />;
@@ -604,7 +604,7 @@ export default function App() {
                     if (knifeEquipped && knifeTypeIdx > 0) {
                       const kt = data.knifeTypes[knifeTypeIdx - 1];
                       previewImg = kt.skins[knifeSkinIdx]?.img ?? kt.img;
-                      previewAlt = kt.skins[knifeSkinIdx]?.name ?? kt.name;
+                      previewAlt = kt.skins[knifeSkinIdx]?.displayName ?? kt.skins[knifeSkinIdx]?.name ?? kt.name;
                     } else {
                       previewImg = knifeStockImg;
                       previewAlt = 'Knife';
@@ -623,7 +623,7 @@ export default function App() {
                     }
                     const gt = data.glovesTypes[glovesTypeIdx];
                     const previewImg = gt.skins[glovesSkinIdx]?.img ?? gt.img;
-                    const previewAlt = gt.skins[glovesSkinIdx]?.name ?? gt.name;
+                    const previewAlt = gt.skins[glovesSkinIdx]?.displayName ?? gt.skins[glovesSkinIdx]?.name ?? gt.name;
                     return <img src={previewImg} alt={previewAlt} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />;
                   })()
                 )}
@@ -765,18 +765,16 @@ export default function App() {
             style={{ overflow: 'hidden', position: 'relative' }}
           >
             {(() => {
-              const tileW = `calc((100% - ${(VISIBLE - 1) * 7}px) / ${VISIBLE})`;
-              const tileWNum = 100 / VISIBLE;
+              const gap = 7;
+              const tileW = `calc((100% - ${(VISIBLE - 1) * gap}px) / ${VISIBLE})`;
               return (
                 <div style={{
                   display: 'flex',
-                  gap: 7,
-                  transform: `translateX(calc(-${carouselStart} * (${tileWNum}% + ${7 / VISIBLE}px) - ${carouselStart * 7 / VISIBLE}px))`,
+                  gap,
+                  transform: `translateX(calc(-${carouselStart * 100 / VISIBLE}% - ${carouselStart * gap / VISIBLE}px))`,
                   transition: 'transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   willChange: 'transform',
-                  width: carouselItems.length > VISIBLE
-                    ? `calc(${carouselItems.length / VISIBLE * 100}% + ${(carouselItems.length - VISIBLE) * 7}px)`
-                    : '100%',
+                  width: '100%',
                 }}>
                   {carouselItems.map((skin, gi) => {
                     if (!skin) return null;
@@ -810,7 +808,7 @@ export default function App() {
                         )}
                         <div style={{ width: '100%', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {imgSrc
-                            ? <img src={imgSrc} alt={skin.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            ? <img src={imgSrc} alt={skin.displayName ?? skin.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             : <GunSVG color={th.heading} size={80} />}
                         </div>
                         <span style={{
@@ -819,7 +817,7 @@ export default function App() {
                           letterSpacing: 0.3, textAlign: 'center',
                           overflow: 'hidden', textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap', maxWidth: '100%',
-                        }}>{skin.name}</span>
+                        }}>{skin.displayName ?? skin.name}</span>
                       </button>
                     );
                   })}

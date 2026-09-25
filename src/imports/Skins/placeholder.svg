@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
+  <title id="title">Skin image unavailable</title>
+  <desc id="desc">A question mark icon for a skin without an image.</desc>
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17233a"/>
+      <stop offset="1" stop-color="#090f1c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#46a8ff"/>
+      <stop offset="1" stop-color="#d8a83e"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="304" height="164" rx="14" fill="url(#panel)" stroke="#355477" stroke-width="2"/>
+  <circle cx="160" cy="90" r="54" fill="#111e31" stroke="url(#accent)" stroke-width="4" opacity=".95"/>
+  <path d="M137 73C139 55 177 52 183 72C189 93 160 97 160 112" fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="132" r="5" fill="#d8a83e"/>
+</svg>
